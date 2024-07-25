@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.TradeDataMapper">
+    
+    <resultMap type="TradeData" id="TradeDataResult">
+        <result property="id"    column="id"    />
+        <result property="name"    column="name"    />
+        <result property="dataSource"    column="data_source"    />
+        <result property="dataType"    column="data_type"    />
+        <result property="link"    column="link"    />
+        <result property="fileType"    column="file_type"    />
+    </resultMap>
+
+    <sql id="selectTradeDataVo">
+        select id, name, data_source, data_type, link, file_type from trade_data
+    </sql>
+
+    <select id="selectTradeDataList" parameterType="TradeData" resultMap="TradeDataResult">
+        <include refid="selectTradeDataVo"/>
+        <where>  
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="dataSource != null  and dataSource != ''"> and data_source = #{dataSource}</if>
+            <if test="dataType != null  and dataType != ''"> and data_type = #{dataType}</if>
+            <if test="link != null  and link != ''"> and link = #{link}</if>
+            <if test="fileType != null  and fileType != ''"> and file_type = #{fileType}</if>
+        </where>
+    </select>
+    
+    <select id="selectTradeDataById" parameterType="Long" resultMap="TradeDataResult">
+        <include refid="selectTradeDataVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertTradeData" parameterType="TradeData" useGeneratedKeys="true" keyProperty="id">
+        insert into trade_data
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="name != null">name,</if>
+            <if test="dataSource != null">data_source,</if>
+            <if test="dataType != null">data_type,</if>
+            <if test="link != null">link,</if>
+            <if test="fileType != null">file_type,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="name != null">#{name},</if>
+            <if test="dataSource != null">#{dataSource},</if>
+            <if test="dataType != null">#{dataType},</if>
+            <if test="link != null">#{link},</if>
+            <if test="fileType != null">#{fileType},</if>
+         </trim>
+    </insert>
+
+    <update id="updateTradeData" parameterType="TradeData">
+        update trade_data
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null">name = #{name},</if>
+            <if test="dataSource != null">data_source = #{dataSource},</if>
+            <if test="dataType != null">data_type = #{dataType},</if>
+            <if test="link != null">link = #{link},</if>
+            <if test="fileType != null">file_type = #{fileType},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteTradeDataById" parameterType="Long">
+        delete from trade_data where id = #{id}
+    </delete>
+
+    <delete id="deleteTradeDataByIds" parameterType="String">
+        delete from trade_data where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
